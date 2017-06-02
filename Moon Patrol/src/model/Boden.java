@@ -4,9 +4,7 @@ public class Boden extends SpielObjekt{
 	private int i = 0;
 	private String[] asciiImage = new String[]
 			{
-					"      									                                                          O                       								                                                O                ",
-					"                                    _			                       _	                     \\|/                                                   _				                  _	           \\|/               ",
-					"___________________________________|#|_______________________________|#|________________________/ \\______________________|#|________________________________|#|___________/ \\_______________"
+					"hallo veränderung",
 			};
 	
 	public Boden(Position position) {
