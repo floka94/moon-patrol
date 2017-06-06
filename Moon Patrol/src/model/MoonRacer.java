@@ -41,7 +41,7 @@ public class MoonRacer extends SpielObjekt {
 		this.ausgabe = asciiImage1;
 	}
 	
-	private void racerSpringt() { // racer springt rauf und runter
+	private void racerSpringt() { // racer springt 
 		if (x > -1 && x < 10) {
 			position.zeile = position.zeile - 1;
 			x++;
@@ -66,9 +66,6 @@ public class MoonRacer extends SpielObjekt {
 			case KeyEvent.VK_UP:						// racer soll springen	
 				springen = 1;
 				break;
-//			case KeyEvent.VK_DOWN:							// braucht man nicht !!!! wieder löschen später		
-//				position.zeile = position.zeile + 1;
-//				break;
 			case KeyEvent.VK_LEFT:
 				if (position.spalte > 0) {
 					position.spalte = position.spalte - 1;
@@ -78,6 +75,8 @@ public class MoonRacer extends SpielObjekt {
 				if (position.spalte < spielfeldRandRechts - 15)
 				position.spalte = position.spalte + 1;
 				break;
+			case KeyEvent.VK_SPACE:
+
 			default:
 				break;
 			}

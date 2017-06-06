@@ -18,15 +18,18 @@ public class Spielfeld extends Observable {
 	private Duene duene;
 	private MoonRacer racer;
 	private Boden boden;
+	private Ufo ufo;
 	
 	public Spielfeld(int zeilen, int spalten) {
 		berge = new Berge(new Position(5, 0));
 		duene = new Duene(new Position(8, 0));
 		boden = new Boden(new Position(15, 0));
 		feld = new char[zeilen][spalten];
-		spielObjekte = new SpielObjekt[1];
-		racer = new MoonRacer(new Position(17, 0), spalten);				//positioniert racer 
+		spielObjekte = new SpielObjekt[2];
+		racer = new MoonRacer(new Position(18, 0), spalten);				//positioniert racer 
+		ufo = new Ufo(new Position(3, 3));
 		spielObjekte[0] = racer;
+		spielObjekte[1] = ufo;
 	}
 	
 	public void initSpielfeld() {						//spielfeld mit leerzeichen initialisieren
@@ -39,26 +42,25 @@ public class Spielfeld extends Observable {
 	
 	public void initLandschaft() {					// spielfeld mit der landschaft initialisieren: berge, d�ne ...
 		char[][] c = berge.stringToChar();
-		for (int z = 0; z < 10; z++) {
+		for (int z = 0; z < c.length; z++) {
 			for (int s = 0; s < feld[0].length; s++) {
-				feld[z+3][s] = c[z][s];				
+				feld[z+4][s] = c[z][s];				
 			}
 		}
 		c = duene.stringToChar();
-		for (int z = 0; z < 15; z++) {
+		for (int z = 0; z < c.length; z++) {
 			for (int s = 0; s < feld[0].length; s++) {
 				if (c[z][s] != '*') {  			// zeichnet die sternchen von der d�ne nicht!
-					feld[z+7][s] = c[z][s];	
+					feld[z+8][s] = c[z][s];	
 				}
 			}
+		}		
+		c = boden.stringToChar();		// zeichnet den boden
+		for (int z = 0; z < c.length; z++) {
+			for (int s = 0; s < feld[0].length; s++) {
+				feld[z+23][s] = c[z][s];				
+			}
 		}
-		
-//		c = boden.stringToChar();
-//		for (int z = 0; z < 10; z++) {
-//			for (int s = 0; s < feld[0].length; s++) {
-//				feld[z+3][s] = c[z][s];				
-//			}
-//		}
 	}
 	
 	public void setKeyEvent(KeyEvent e) {
@@ -72,7 +74,7 @@ public class Spielfeld extends Observable {
 			duene.bewegen();
 			berge.bewegen();
 			for (int i = 0; i < spielObjekte.length; i++) {					// zeichnet alle Figuren im array spielfiguren[] ins char[][] array deshalb drei for schleifen
-				spielObjekte[i].bewegen();									// jede spielfigur bewegen				
+				spielObjekte[i].bewegen();									// jedes spielobjekt bewegen				
 				char[][] c = spielObjekte[i].stringToChar();
 				for (int z = 0; z < spielObjekte[i].stringToChar().length; z++) {
 					for (int s = 0; s < spielObjekte[i].getAusgabe()[z].length(); s++) {

@@ -13,7 +13,7 @@ public class Menue extends Observable {
 	public Menue(int zeilen, int spalten) {
 		feld = new char[zeilen][spalten];
 		titelBild = new TitelBild(new Position(3, spalten/2 - 37));		
-		racer = new MoonRacer(new Position(17, 0), spalten);				//positioniert racer 
+		racer = new MoonRacer(new Position(18, 0), spalten);				//positioniert racer 
 	}
 	
 	private void initFeld() {						
