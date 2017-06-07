@@ -9,8 +9,9 @@
 package model;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
-public class MoonRacer extends SpielObjekt {	
+public class MoonRacer extends SpielObjekt implements Schießen {	
 	protected KeyEvent keyEvent;
 	private String[] asciiImage1 = new String[] {
 			" _________",
@@ -34,6 +35,8 @@ public class MoonRacer extends SpielObjekt {
 	private int spielfeldRandRechts;	
 	private int springen = 0;			// für switch case racer springt
 	private int x = 0;					// für methode racerSpringt()
+	private boolean sollSchießen = false;
+	public ArrayList<Geschoss> geschosse = new ArrayList<Geschoss>();
 	
 	public MoonRacer(Position position, int spielfeldRandRechts) {
 		super(position);	
@@ -67,16 +70,16 @@ public class MoonRacer extends SpielObjekt {
 				springen = 1;
 				break;
 			case KeyEvent.VK_LEFT:
-				if (position.spalte > 0) {
+				if (position.spalte > 0) {						// fährt nicht über den linken rand
 					position.spalte = position.spalte - 1;
 				}				
 				break;
 			case KeyEvent.VK_RIGHT:
-				if (position.spalte < spielfeldRandRechts - 15)
+				if (position.spalte < spielfeldRandRechts - 15)			// fährt nicht über den rechten rand
 				position.spalte = position.spalte + 1;
 				break;
 			case KeyEvent.VK_SPACE:
-
+				sollSchießen = true;
 			default:
 				break;
 			}
@@ -98,7 +101,7 @@ public class MoonRacer extends SpielObjekt {
 	@Override
 	public char[][] stringToChar() {
 		String[] s = asciiImage1;
-		switch (ausgabeAuswahl) {
+		switch (ausgabeAuswahl) {		//erzeugt ein bewegtes bild der reifen
 		case 1:	
 			ausgabeAuswahl++;
 			break;
@@ -120,5 +123,16 @@ public class MoonRacer extends SpielObjekt {
 			}
 		}
 		return c;
+	}
+	
+	@Override
+	public void schießen() {		
+		if (sollSchießen) {
+			geschosse.add(new Geschoss(new Position(this.position.zeile, this.position.spalte)));			
+			sollSchießen = false;
+		}	
+		for (Geschoss g : geschosse) {
+			g.position.zeile--;
+		}
 	}
 }

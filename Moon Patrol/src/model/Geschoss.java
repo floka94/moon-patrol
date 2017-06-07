@@ -10,11 +10,10 @@ public class Geschoss extends SpielObjekt{
 	public void bewegen() {
 		// TODO Auto-generated method stub
 		super.bewegen();
-	}
-	
-	@Override
-	public String toString() {
-		return "|";
+	}	
+
+	public char getChar() {
+		return '|';
 	}
 
 }
