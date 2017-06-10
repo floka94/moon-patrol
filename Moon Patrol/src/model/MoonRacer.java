@@ -36,6 +36,7 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 	private int springen = 0;			// für switch case racer springt
 	private int x = 0;					// für methode racerSpringt()
 	private boolean sollSchießen = false;
+	private boolean darfSchießen = true;	
 	public ArrayList<Geschoss> geschosse = new ArrayList<Geschoss>();
 	
 	public MoonRacer(Position position, int spielfeldRandRechts) {
@@ -78,8 +79,10 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 				if (position.spalte < spielfeldRandRechts - 15)			// fährt nicht über den rechten rand
 				position.spalte = position.spalte + 1;
 				break;
-			case KeyEvent.VK_SPACE:
-				sollSchießen = true;
+			case KeyEvent.VK_SPACE:		
+				if (darfSchießen) {
+					sollSchießen = true;	
+				}																
 			default:
 				break;
 			}
@@ -126,13 +129,26 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 	}
 	
 	@Override
-	public void schießen() {		
-		if (sollSchießen) {
-			geschosse.add(new Geschoss(new Position(this.position.zeile, this.position.spalte)));			
+	public void schießen() {					//wird immer aufgerufen aber nur wenn space gedrückt wird, wird ein neues
+		if (sollSchießen) {						// geschoss erzeugt mit der aktuellen Position des Racers
+			geschosse.add(new Geschoss(new Position(this.position.zeile + 1, this.position.spalte + 5)));	
 			sollSchießen = false;
-		}	
-		for (Geschoss g : geschosse) {
-			g.position.zeile--;
+			darfSchießen = false;
+		}
+		if (!geschosse.isEmpty()) {
+			if (geschosse.get(geschosse.size() - 1).position.zeile < this.position.zeile - 2) { 	// geschosse kommen mit gewissen abstand
+				darfSchießen = true;   			// darf erst schießen wenn letztes geschoss einen gewissen abstand zum auto besitzt
+			}
+			for (Geschoss g : geschosse) {   	
+				if (g.speed == 0) {				// Geschwindigkeit der Geschosse
+					g.position.zeile--;
+					g.speed++;
+				} else if (g.speed == 3) {
+					g.speed = 0;
+				} else {
+					g.speed++;
+				}
+			}			
 		}
 	}
 }

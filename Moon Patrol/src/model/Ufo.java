@@ -1,6 +1,6 @@
 package model;
 
-public class Ufo extends SpielObjekt {
+public class Ufo extends SpielObjekt implements Schießen {
 	private String[][] asciiImages = new String[][] {
 		{
 		"   .-^-.   ",
@@ -43,12 +43,15 @@ public class Ufo extends SpielObjekt {
 		"(_________)"
 		}
 		};
-
+	private int spielfeldRandRechts;
 	private int i = 0;
 	private int counter = 0;
-	public Ufo(Position position) {
+	private boolean nachRechts = true;
+	
+	public Ufo(Position position, int spielfeldRandRechts) {
 		super(position);
 		this.ausgabe = asciiImages[1];
+		this.spielfeldRandRechts = spielfeldRandRechts;
 	}
 	
 	@Override
@@ -77,7 +80,22 @@ public class Ufo extends SpielObjekt {
 	}
 	
 	@Override
-	public void bewegen() {
+	public void bewegen() {		
+		if (position.spalte < spielfeldRandRechts - 11 && nachRechts) { // fährt nicht über den linken rand
+			position.spalte++;
+		} else {
+			nachRechts = false;
+		}
+		if (position.spalte > 0 && !nachRechts) { // fährt nicht über den rechten rand
+			position.spalte--;												
+		} else {
+			nachRechts = true;
+		}
+	}
+
+	@Override
+	public void schießen() {
+		// TODO Auto-generated method stub
 		
 	}
 }

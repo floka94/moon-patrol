@@ -27,7 +27,7 @@ public class Spielfeld extends Observable {
 		feld = new char[zeilen][spalten];
 		spielObjekte = new SpielObjekt[2];
 		racer = new MoonRacer(new Position(18, 0), spalten);				//positioniert racer 
-		ufo = new Ufo(new Position(1, 3));									//positioniert ufo
+		ufo = new Ufo(new Position(1, 3), spalten);									//positioniert ufo
 		spielObjekte[0] = racer;
 		spielObjekte[1] = ufo;
 	}
@@ -73,25 +73,22 @@ public class Spielfeld extends Observable {
 			initLandschaft();			
 			duene.bewegen();
 			berge.bewegen();
-			for (int i = 0; i < spielObjekte.length; i++) {					// zeichnet alle Figuren im array spielfiguren[] ins char[][] array deshalb drei for schleifen
-				spielObjekte[i].bewegen();									// jedes spielobjekt bewegen			
-				char[][] c = spielObjekte[i].stringToChar();
-				for (int z = 0; z < spielObjekte[i].stringToChar().length; z++) {
-					for (int s = 0; s < spielObjekte[i].getAusgabe()[z].length(); s++) {
-						feld[spielObjekte[i].position.zeile + z][spielObjekte[i].position.spalte + s] = c[z][s];
+			for (SpielObjekt sp : spielObjekte) {					// zeichnet alle Figuren im array spielfiguren[] ins char[][] array deshalb drei for schleifen
+				sp.bewegen();									// jedes spielobjekt bewegen			
+				char[][] c = sp.stringToChar();
+				for (int z = 0; z < sp.stringToChar().length; z++) {
+					for (int s = 0; s < sp.getAusgabe()[z].length(); s++) {
+						feld[sp.position.zeile + z][sp.position.spalte + s] = c[z][s];
 					}
 				}
-//				if (spielObjekte[i] instanceof Schießen) {
-//					
-//				}
-				racer.schießen();
-				if (!racer.geschosse.isEmpty()) {
-					for (Geschoss g : racer.geschosse) {
-						feld[g.position.zeile][g.position.spalte] = g.getChar();
-						if (g.position.zeile == 0) {
-							racer.geschosse.remove(g);
-							break;
-						}
+			}
+			racer.schießen();
+			if (!racer.geschosse.isEmpty()) {
+				for (Geschoss g : racer.geschosse) {
+					feld[g.position.zeile][g.position.spalte] = g.getChar();  // zeichne die geschosse ins feld
+					if (g.position.zeile == 0) {					// alle geschosse die den oberen rand erreichen werden gelöscht
+						racer.geschosse.remove(g);
+						break;
 					}
 				}
 			}

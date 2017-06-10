@@ -1,6 +1,7 @@
 package model;
 
 public class Geschoss extends SpielObjekt{
+	protected int speed = 0;
 	
 	public Geschoss(Position position) {
 		super(position);
