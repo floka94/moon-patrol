@@ -130,20 +130,22 @@ public class MoonRacer extends SpielObjekt implements Schieﬂen {
 	
 	@Override
 	public void schieﬂen() {					//wird immer aufgerufen aber nur wenn space gedr¸ckt wird, wird ein neues
+		int abstandGeschosse = 2;
+		int speedGeschosse = 3;							// umso kleiner der wert umso schneller
 		if (sollSchieﬂen) {						// geschoss erzeugt mit der aktuellen Position des Racers
 			geschosse.add(new Geschoss(new Position(this.position.zeile + 1, this.position.spalte + 5)));	
 			sollSchieﬂen = false;
 			darfSchieﬂen = false;
 		}
 		if (!geschosse.isEmpty()) {
-			if (geschosse.get(geschosse.size() - 1).position.zeile < this.position.zeile - 2) { 	// geschosse kommen mit gewissen abstand
+			if (geschosse.get(geschosse.size() - 1).position.zeile < this.position.zeile - abstandGeschosse) { 	// geschosse kommen mit gewissen abstand
 				darfSchieﬂen = true;   			// darf erst schieﬂen wenn letztes geschoss einen gewissen abstand zum auto besitzt
 			}
 			for (Geschoss g : geschosse) {   	
 				if (g.speed == 0) {				// Geschwindigkeit der Geschosse
 					g.position.zeile--;
 					g.speed++;
-				} else if (g.speed == 3) {
+				} else if (g.speed == speedGeschosse) {
 					g.speed = 0;
 				} else {
 					g.speed++;

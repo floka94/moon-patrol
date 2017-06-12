@@ -32,6 +32,25 @@ public class Spielfeld extends Observable {
 		spielObjekte[1] = ufo;
 	}
 	
+	private void detectCollision() {
+		for (Geschoss g : racer.geschosse) {
+			if (detectCollision(ufo, g))
+				spielObjekte = new SpielObjekt[] { racer };
+		}
+	}
+	
+	private boolean detectCollision(Ufo ufo, Geschoss g) {       // gibt true zurück wenn ein geschoss ein ufo getroffen hat
+		char[][] test = ufo.stringToChar();
+		int zeilen = test.length;
+		int spalten = test[1].length;
+		if (g.position.zeile >= ufo.position.zeile && g.position.zeile <= ufo.position.zeile + zeilen
+				&& g.position.spalte >= ufo.position.spalte && g.position.spalte <= ufo.position.spalte + spalten) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void initSpielfeld() {						//spielfeld mit leerzeichen initialisieren
 		for (int z = 0; z < feld.length; z++) {
 			for (int s = 0; s < feld[0].length; s++) {
@@ -50,12 +69,12 @@ public class Spielfeld extends Observable {
 		c = duene.stringToChar();
 		for (int z = 0; z < c.length; z++) {
 			for (int s = 0; s < feld[0].length; s++) {
-				if (c[z][s] != '*') {  			// zeichnet die sternchen von der dï¿½ne nicht!
+				if (c[z][s] != '*') {  						// zeichnet die sternchen von der dï¿½ne nicht!
 					feld[z+8][s] = c[z][s];	
 				}
 			}
 		}		
-		c = boden.stringToChar();		// zeichnet den boden
+		c = boden.stringToChar();						// zeichnet den boden
 		for (int z = 0; z < c.length; z++) {
 			for (int s = 0; s < feld[0].length; s++) {
 				feld[z+23][s] = c[z][s];				
@@ -91,6 +110,7 @@ public class Spielfeld extends Observable {
 						break;
 					}
 				}
+				detectCollision();
 			}
 			setChanged();
 			notifyObservers();
