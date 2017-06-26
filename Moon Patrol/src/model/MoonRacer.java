@@ -18,26 +18,32 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 			"/######\\__\\___",
 			"\\#############\\",	
 			"/__\\ /\\ \\  / /\\",
-			"\\__/ \\_\\/  \\/_/"};
+			"\\__/ \\_\\/  \\/_/"
+			};
 	private String[] asciiImage2 = new String[] {
 			" _________",
 			"/######\\__\\___",
 			"\\#############\\",
 			"/\\ \\ / /\\  /__\\",
-			"\\_\\/ \\/_/  \\__/"};
+			"\\_\\/ \\/_/  \\__/"
+			};
 	private String[] asciiImage3 = new String[] {
 			" _________",
 			"/######\\__\\___",
 			"\\#############\\",
 			"/ /\\ /__\\  /\\ \\",
-			"\\/_/ \\__/  \\_\\/"};	
-	private int ausgabeAuswahl = 1;		// für switch case anweisung
+			"\\/_/ \\__/  \\_\\/"
+			};	
+	private int ausgabeAuswahl = 1;		         // für switch case anweisung
 	private int spielfeldRandRechts;	
-	private int springen = 0;			// für switch case racer springt
-	private int x = 0;					// für methode racerSpringt()
+	private int springen = 0;			        //  Hilfsvariable für switch case racer springt
+	private int springGeschwindigkeit = 4;      //  wie schnell soll racer springen -> einstellbar
+	private int sprungHoeheAktuell = 0;			// Hilfsvariable für methode racerSpringt()
+	private int sprungHoeheSoll = 7;		    // Sprunghoehe -> einstellbar
 	private boolean sollSchießen = false;
 	private boolean darfSchießen = true;	
 	public ArrayList<Geschoss> geschosse = new ArrayList<Geschoss>();
+	private char geschossChar = '|';
 	
 	public MoonRacer(Position position, int spielfeldRandRechts) {
 		super(position);	
@@ -45,15 +51,15 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 		this.ausgabe = asciiImage1;
 	}
 	
-	private void racerSpringt() { // racer springt 
-		if (x > -1 && x < 10) {
-			position.zeile = position.zeile - 1;
-			x++;
-		} else if (x > 9 && x < 20) {
-			position.zeile = position.zeile + 1;
-			x++;
-		} else if (x == 20) {
-			x = 0;
+	private void racerSpringt() {            // racer springt 
+		if (sprungHoeheAktuell > -1 && sprungHoeheAktuell < sprungHoeheSoll) {
+			position.x = position.x - 1;
+			sprungHoeheAktuell++;
+		} else if (sprungHoeheAktuell > sprungHoeheSoll - 1 && sprungHoeheAktuell < sprungHoeheSoll * 2) {
+			position.x = position.x + 1;
+			sprungHoeheAktuell++;
+		} else if (sprungHoeheAktuell == sprungHoeheSoll * 2) {
+			sprungHoeheAktuell = 0;
 			springen = -1;
 		}
 	}
@@ -71,13 +77,13 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 				springen = 1;
 				break;
 			case KeyEvent.VK_LEFT:
-				if (position.spalte > 0) {						// fährt nicht über den linken rand
-					position.spalte = position.spalte - 1;
+				if (position.y > 0) {						// fährt nicht über den linken rand
+					position.y = position.y - 1;
 				}				
 				break;
 			case KeyEvent.VK_RIGHT:
-				if (position.spalte < spielfeldRandRechts - 15)			// fährt nicht über den rechten rand
-				position.spalte = position.spalte + 1;
+				if (position.y < spielfeldRandRechts - 15)			// fährt nicht über den rechten rand
+				position.y = position.y + 1;
 				break;
 			case KeyEvent.VK_SPACE:		
 				if (darfSchießen) {
@@ -87,16 +93,13 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 				break;
 			}
 		}
-		switch(springen) {	// racer springt 1/2 der geschwindigkeit
-		case 1:
+		if (springen == springGeschwindigkeit) {			// racer springt mit geringerer geschwindigkeit
+			springen = 1;			
+		} else if (springen > 1 && springen < springGeschwindigkeit) {
+			springen++;
+		} else if (springen == 1) {
 			racerSpringt();
 			springen++;
-			break;
-		case 2:
-			springen = 1;
-			break;
-		default:
-			break;
 		}
 		keyEvent = null;
 	}	
@@ -104,7 +107,7 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 	@Override
 	public char[][] stringToChar() {
 		String[] s = asciiImage1;
-		switch (ausgabeAuswahl) {		//erzeugt ein bewegtes bild der reifen
+		switch (ausgabeAuswahl) {		// erzeugt ein bewegtes bild der reifen
 		case 1:	
 			ausgabeAuswahl++;
 			break;
@@ -120,30 +123,30 @@ public class MoonRacer extends SpielObjekt implements Schießen {
 			break;
 		}
 		char[][] c = new char[s.length][20];
-		for (int i = 0; i < s.length; i++) {
-			for (int z = 0; z < s[i].length(); z++) {
-				c[i][z] = s[i].charAt(z);
+		for (int x = 0; x < s.length; x++) {
+			for (int y = 0; y < s[x].length(); y++) {
+				c[x][y] = s[x].charAt(y);
 			}
 		}
 		return c;
 	}
 	
 	@Override
-	public void schießen() {					//wird immer aufgerufen aber nur wenn space gedrückt wird, wird ein neues
+	public void schießen() {					//wird immer aufgerufen, aber nur wenn Space gedrückt wird, wird ein neues Geschoss erzeugt!
 		int abstandGeschosse = 2;
-		int speedGeschosse = 3;							// umso kleiner der wert umso schneller
-		if (sollSchießen) {						// geschoss erzeugt mit der aktuellen Position des Racers
-			geschosse.add(new Geschoss(new Position(this.position.zeile + 1, this.position.spalte + 5)));	
+		int speedGeschosse = 3;							// umso kleiner der wert umso schneller die Geschosse
+		if (sollSchießen) {						// Geschoss wird erzeugt mit der aktuellen Position des Racers
+			geschosse.add(new Geschoss(new Position(this.position.x + 1, this.position.y + 5), geschossChar));	
 			sollSchießen = false;
 			darfSchießen = false;
 		}
 		if (!geschosse.isEmpty()) {
-			if (geschosse.get(geschosse.size() - 1).position.zeile < this.position.zeile - abstandGeschosse) { 	// geschosse kommen mit gewissen abstand
-				darfSchießen = true;   			// darf erst schießen wenn letztes geschoss einen gewissen abstand zum auto besitzt
+			if (geschosse.get(geschosse.size() - 1).position.x < this.position.x - abstandGeschosse) { 	// geschosse kommen mit gewissen abstand
+				darfSchießen = true;   			     // Spieler darf erst schießen wenn letztes geschoss einen gewissen abstand zum auto besitzt
 			}
 			for (Geschoss g : geschosse) {   	
-				if (g.speed == 0) {				// Geschwindigkeit der Geschosse
-					g.position.zeile--;
+				if (g.speed == 0) {				// Regelung der Geschwindigkeit der Geschosse 
+					g.position.x--;
 					g.speed++;
 				} else if (g.speed == speedGeschosse) {
 					g.speed = 0;

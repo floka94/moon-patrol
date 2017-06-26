@@ -9,17 +9,17 @@
 package model;
 
 public class Position {
-	public int zeile;
-	public int spalte;
+	public int x;
+	public int y;
 
-	public Position(int zeile, int spalte) {
-		this.zeile = zeile;
-		this.spalte = spalte;
+	public Position(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
 	public boolean equals(Object o) { // Erlaubt einen Positionsvergleich und gibt bei gleichheit boolschen wert zurück
 		Position that = (Position) o;
-		return (this.zeile == that.zeile && this.spalte == this.zeile);
+		return (this.x == that.x && this.y == this.x);
 	}
 }

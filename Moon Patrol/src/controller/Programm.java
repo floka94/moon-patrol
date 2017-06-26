@@ -16,18 +16,19 @@ import model.Spielfeld;
 import view.EinUndAusgabe;
 
 public class Programm implements Observer{
-	static int zeilen = 25;
-	static int spalten = 120;
+	static int FensterLaengeX = 28;
+	static int FensterBreiteY = 145;
 	private Spielfeld spielfeld;
 	private EinUndAusgabe einUndAusgabe;
 	private Menue menue;
+	private int schriftgroesse = 20;
 	
 	public Programm() {
-		spielfeld = new Spielfeld(zeilen, spalten);
+		spielfeld = new Spielfeld(FensterLaengeX, FensterBreiteY);
 		spielfeld.addObserver(this);
-		einUndAusgabe = new EinUndAusgabe("Moon Patrol", 16, zeilen, spalten);			
+		einUndAusgabe = new EinUndAusgabe("Moon Patrol", schriftgroesse, FensterLaengeX, FensterBreiteY);			
 		einUndAusgabe.addObserver(this);
-		menue = new Menue(zeilen, spalten);
+		menue = new Menue(FensterLaengeX, FensterBreiteY);
 		menue.addObserver(this);
 		menue.startMenue();
 		spielfeld.start();

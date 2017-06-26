@@ -10,10 +10,10 @@ public class Menue extends Observable {
 	protected KeyEvent keyEvent;
 	public char[][] feld;
 	
-	public Menue(int zeilen, int spalten) {
-		feld = new char[zeilen][spalten];
-		titelBild = new TitelBild(new Position(3, spalten/2 - 37));		
-		racer = new MoonRacer(new Position(18, 0), spalten);				//positioniert racer 
+	public Menue(int x, int y) {
+		feld = new char[x][y];
+		titelBild = new TitelBild(new Position(3, y/2 - 37));		
+		racer = new MoonRacer(new Position(x - 7, 0), y);				//positioniert racer 
 	}
 	
 	private void initFeld() {						
@@ -28,7 +28,7 @@ public class Menue extends Observable {
 		char[][] c = titelBild.stringToChar();
 		for (int z = 0; z < c.length; z++) {
 			for (int s = 0; s < titelBild.getAusgabe()[z].length(); s++) {
-				feld[titelBild.position.zeile + z][titelBild.position.spalte + s] = c[z][s];
+				feld[titelBild.position.x + z][titelBild.position.y + s] = c[z][s];
 			}
 		}
 	}
@@ -40,14 +40,14 @@ public class Menue extends Observable {
 			char[][] c = racer.stringToChar();
 			for (int z = 0; z < c.length; z++) {
 				for (int s = 0; s < racer.getAusgabe()[z].length(); s++) {
-					feld[racer.position.zeile + z][racer.position.spalte + s] = c[z][s];
+					feld[racer.position.x + z][racer.position.y + s] = c[z][s];
 				}
 			}
 			count++;
-			racer.position.spalte++;
+			racer.position.y++;
 			setChanged();
 			notifyObservers();
-			if (racer.position.spalte > feld[0].length - 15) {
+			if (racer.position.y > feld[0].length - 15) {	
 				break;
 			}
 			try {

@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Ufo extends SpielObjekt implements Schieﬂen {
 	private String[][] asciiImages = new String[][] {
 		{
@@ -47,6 +50,10 @@ public class Ufo extends SpielObjekt implements Schieﬂen {
 	private int i = 0;
 	private int counter = 0;
 	private boolean nachRechts = true;
+	public ArrayList<Geschoss> geschosse = new ArrayList<Geschoss>();
+	private char geschossChar = 'U';
+	private boolean sollSchieﬂen = false;
+	private boolean darfSchieﬂen = true;
 	
 	public Ufo(Position position, int spielfeldRandRechts) {
 		super(position);
@@ -68,9 +75,9 @@ public class Ufo extends SpielObjekt implements Schieﬂen {
 		}		
 		String[] s = asciiImages[i];
 		char[][] c = new char[s.length][20];
-		for (int i = 0; i < s.length; i++) {
-			for (int z = 0; z < s[i].length(); z++) {
-				c[i][z] = s[i].charAt(z);
+		for (int x = 0; x < s.length; x++) {
+			for (int y = 0; y < s[x].length(); y++) {
+				c[x][y] = s[x].charAt(y);
 			}
 		}
 		if (i == 7) {
@@ -81,21 +88,50 @@ public class Ufo extends SpielObjekt implements Schieﬂen {
 	
 	@Override
 	public void bewegen() {		
-		if (position.spalte < spielfeldRandRechts - 11 && nachRechts) { // f‰hrt nicht ¸ber den linken rand
-			position.spalte++;
+		if (position.y < spielfeldRandRechts - 11 && nachRechts) { // f‰hrt nicht ¸ber den linken rand
+			position.y++;
 		} else {
 			nachRechts = false;
 		}
-		if (position.spalte > 0 && !nachRechts) { // f‰hrt nicht ¸ber den rechten rand
-			position.spalte--;												
+		if (position.y > 0 && !nachRechts) { // f‰hrt nicht ¸ber den rechten rand
+			position.y--;												
 		} else {
 			nachRechts = true;
 		}
 	}
-
+	
 	@Override
 	public void schieﬂen() {
-		// TODO Auto-generated method stub
-		
-	}
+		int geschosseWahrscheinlichkeit = 40;
+		int abstandGeschosse = 8;
+		int speedGeschosse = 7;	
+		Random rand = new Random();
+		if (rand.nextInt(geschosseWahrscheinlichkeit) == 1) {
+			sollSchieﬂen = true;			
+		}
+		if (sollSchieﬂen && darfSchieﬂen) {						// Geschoss wird erzeugt mit der aktuellen Position des Racers
+			geschosse.add(new Geschoss(new Position(this.position.x + 2, this.position.y + 6), geschossChar));	
+			sollSchieﬂen = false;
+			darfSchieﬂen = false;
+		}
+		/* Geschosse kommen mit gewissen Abstand, und Ufo darf erst wieder schieﬂen
+		 * wenn weniger als 3 geschosse auf dem Spielfeld sind und der Abstand zwischen den
+		 * Geschossen passt
+		 */
+		if (!geschosse.isEmpty()) {
+			if (geschosse.get(geschosse.size() - 1).position.x > this.position.x - abstandGeschosse && geschosse.size() < 3) { 	
+				darfSchieﬂen = true;   			     
+			}
+			for (Geschoss g : geschosse) {   	
+				if (g.speed == 0) {				// Regelung der Geschwindigkeit der Geschosse 
+					g.position.x++;
+					g.speed++;
+				} else if (g.speed == speedGeschosse) {
+					g.speed = 0;
+				} else {
+					g.speed++;
+				}
+			}			
+		}
+	}	
 }

@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -52,8 +53,10 @@ public class EinUndAusgabe extends Observable {
 		area = new JTextArea(zeilen, spalten);
 		area.setFont(new Font("Monospaced", Font.BOLD, fontGroesse));
 		area.setEditable(false);
+		area.setBackground(Color.black);
+		area.setForeground(Color.yellow);
 
-		frame = new JFrame(fensterName + " (Schriftgröße: " + fontGroesse + ", Höhe: " + zeilen + " Zeichen, Breite: "
+		frame = new JFrame(fensterName + " (Schriftgroe�e: " + fontGroesse + ", Hoehe: " + zeilen + " Zeichen, Breite: "
 				+ spalten + " Zeichen)");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.add(area);

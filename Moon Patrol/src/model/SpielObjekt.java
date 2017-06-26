@@ -27,7 +27,7 @@ public class SpielObjekt implements StringToChar {
 
 	@Override
 	public char[][] stringToChar() {	
-		char[][] c = new char[ausgabe.length][200];
+		char[][] c = new char[ausgabe.length][400];
 		for (int i = 0; i < ausgabe.length; i++) {
 			for (int z = 0; z < ausgabe[i].length(); z++) {
 				c[i][z] = ausgabe[i].charAt(z);

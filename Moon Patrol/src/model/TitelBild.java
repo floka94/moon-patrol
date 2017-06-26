@@ -10,7 +10,6 @@ public class TitelBild extends SpielObjekt {
 
 	public TitelBild(Position position) {
 		super(position);
-		// this.position = position;
 		this.ausgabe = asciiImage;
 	}
 
